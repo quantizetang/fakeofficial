@@ -23,21 +23,21 @@ if ON_OPENSHIFT:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': os.path.join(os.environ['OPENSHIFT_DATA_DIR'], 'fakeofficial.db'),  # Or path to database file if using sqlite3.
+            'NAME': 'fakeofficial',  # Or path to database file if using sqlite3.
             'USER': 'admin',                      # Not used with sqlite3.
             'PASSWORD': 'kzYQCzTmR1wx',                  # Not used with sqlite3.
-            'HOST': '127.9.222.1',                      # Set to empty string for localhost. Not used with sqlite3.
-            'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+            'HOST': os.environ['OPENSHIFT_DB_HOST'],                      # Set to empty string for localhost. Not used with sqlite3.
+            'PORT': os.environ['OPENSHIFT_DB_PORT'],                      # Set to empty string for default. Not used with sqlite3.
         }
     }
 else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.mysql',  # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-            'NAME': os.path.join(PROJECT_DIR, 'fakeofficial.db'),  # Or path to database file if using sqlite3.
-            'USER': 'admin',                      # Not used with sqlite3.
-            'PASSWORD': 'kzYQCzTmR1wx',                  # Not used with sqlite3.
-            'HOST': '127.9.222.1',                      # Set to empty string for localhost. Not used with sqlite3.
+            'NAME': os.path.join(PROJECT_DIR, 'fakeofficial'),  # Or path to database file if using sqlite3.
+            'USER': 'root',                      # Not used with sqlite3.
+            'PASSWORD': 'password',                  # Not used with sqlite3.
+            'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
             'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
         }
     }

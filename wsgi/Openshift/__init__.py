@@ -1,0 +1,1 @@
+uses_cases_insensitive_names = True

@@ -3,3 +3,29 @@
 # available.  Otherwise it will execute while your application is stopped
 # before the deploy step.  This script gets executed directly, so it
 # could be python, php, ruby, etc.
+
+# create the database if it doesn't exist
+# https://www.redhat.com/openshift/forums/express/mysql-db-name
+if ! /usr/bin/mysql -u "$OPENSHIFT_DB_USERNAME" --password="$OPENSHIFT_DB_PASSWORD" -h "$OPENSHIFT_DB_HOST" -e "show tables;" $OPENSHIFT_APP_NAME > /dev/null
+then
+    /usr/bin/mysqladmin -u "$OPENSHIFT_DB_USERNAME" --password="$OPENSHIFT_DB_PASSWORD" -h "$OPENSHIFT_DB_HOST" create "$OPENSHIFT_APP_NAME"
+    echo "Created MySQL database $OPENSHIFT_APP_NAME"
+fi
+
+# copy the admin media into place
+if [ ! -d "$DIRECTORY" ]; then
+    if mkdir $OPENSHIFT_REPO_DIR/wsgi/static/admin
+    then
+        echo "Created directory $OPENSHIFT_REPO_DIR/wsgi/static/admin"
+        echo "Copying admin media into $OPENSHIFT_REPO_DIR/wsgi/static/admin"
+        cp -R $OPENSHIFT_APP_DIR/virtenv/lib/python2.6/site-packages/Django-1.3-py2.6.egg/django/contrib/admin/media/** $OPENSHIFT_REPO_DIR/wsgi/static/admin
+    fi
+fi
+
+# cd into the project to run django manage.py commands
+cd $OPENSHIFT_REPO_DIR/wsgi/openshift
+
+# run syncdb
+# https://www.redhat.com/openshift/kb/kb-e1010-show-me-your-django-getting-django-up-and-running-in-5-minutes
+echo "Executing './manage.py syncdb --noinput'"
+./manage.py syncdb --noinput
